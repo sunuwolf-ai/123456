@@ -1,0 +1,32 @@
+name: Build Plugin
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x JjajangRPG/gradlew
+
+      - name: Build with Gradle
+        run: |
+          cd JjajangRPG
+          ./gradlew build
+
+      - name: Upload built jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: JjajangRPG-jar
+          path: JjajangRPG/build/libs/*.jar
